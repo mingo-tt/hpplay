@@ -3,9 +3,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/file_flow?autoReconnect=true
+    url: jdbc:mysql://localhost:3306/hp_play?autoReconnect=true
     username: root
     password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
   thymeleaf:
     cache: false
     prefix: classpath:/templates/

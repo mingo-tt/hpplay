@@ -4,8 +4,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>chplayer</title>
-		<script type="text/javascript" src="chplayer/chplayer.min.js"></script>
-		<link rel="stylesheet" href="css/style.css">
+		<script type="text/javascript" src="/chplayer/chplayer.min.js"></script>
+		<link rel="stylesheet" href="/css/style.css">
 	</head>
 
 	<body>
@@ -27,7 +27,7 @@
 				// flashplayer: true, //强制使用flashplayer
 				html5m3u8:true,//是否使用hls，默认不选择，如果此属性设置成true，则不能设置flashplayer:true,
 				chtrack: {
-					src: 'screenshot/srt.srt',
+					src: '/screenshot/srt.srt',
 					charset: 'utf-8'
 				}, //字幕文件及编码
 				// preview: {
@@ -49,7 +49,7 @@
 					}
 				], //提示点，words=提示点的内容，time=提示点对应的时间
 				video: {
-					url: 'source/video/01.mp4',
+					url: '/source/video/01.mp4',
 					type: 'video/mp4'
 				}
 				
@@ -282,7 +282,7 @@
 				var danmuObj = {
 					list: [{
 							type: 'image',
-							url: 'screenshot/logo.png',
+							url: '/screenshot/logo.png',
 							radius: 30, //圆角弧度
 							width: 30, //定义宽，必需要定义
 							height: 30, //定义高，必需要定义
@@ -358,16 +358,16 @@
 			  </div>
 			  <div class="message_row other-message">
 				<div class="message-content">
-				  <img class="head" src="img/friends/David.png" alt="">
+				  <img class="head" src="/img/friends/David.png" alt="">
 				  <div class="message-text">推荐给你一部好看的电影...</div>
 				  <div class="message-time">09/23 10:16</div>
 				</div>
 			  </div>
 			  <div class="message_row other-message">
 				<div class="message-content">
-				  <img class="head" src="img/friends/David.png" alt="">
+				  <img class="head" src="/img/friends/David.png" alt="">
 				  <!-- <div class="message-text"></div> -->
-				  <img class="ejIcon" src="img/emoji/like.png" alt="">
+				  <img class="ejIcon" src="/img/emoji/like.png" alt="">
 				  <div class="message-time">09/23 10:16</div>
 				</div>
 			  </div>
