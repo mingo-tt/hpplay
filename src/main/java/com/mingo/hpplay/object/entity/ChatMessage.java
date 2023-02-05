@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -23,4 +24,7 @@ public class ChatMessage {
 
     @Column(name = "content")
     private String content;
+
+    @Column(name = "create_time")
+    private Date createTime;
 }

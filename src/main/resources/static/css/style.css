@@ -78,10 +78,10 @@ input:focus{
 }
 .sendMsg{
     width: 80%;
-    height: 100%;
+    height: 40px;
     margin: 0 15px;
     padding: 0 10px;
-    font-size: 24px;
+    font-size: 16px;
     border: none;
 }
 .ipt_icon{
@@ -279,14 +279,19 @@ input:focus{
     color: #777;
 }
 .other-message .message-time{
-    width: 66px;
+    width: 120px;
     margin-left: 65px;
+}
+.you-message .message-time{
+    width: 120px;
 }
 .you-message{
     justify-content: end;
 }
 .you-message .message-content{
     justify-items: end;
+    grid-template-columns: 1fr 48px;
+    grid-column-gap: 15px;
 }
 .you-message .message-text{
     color: rgb(73, 73, 73);

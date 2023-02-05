@@ -4,7 +4,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>chplayer</title>
+		<script type="text/javascript" src="/js/jquery-3.2.1.min.js" ></script>
 		<script type="text/javascript" src="/chplayer/chplayer.min.js"></script>
+		<script type="text/javascript" src="/js/index.js"></script>
 		<link rel="stylesheet" href="/css/style.css">
 	</head>
 
@@ -49,7 +51,7 @@
 					}
 				], //提示点，words=提示点的内容，time=提示点对应的时间
 				video: {
-					url: '/source/video/01.mp4',
+					url: '/source/video/fty01.mp4',
 					type: 'video/mp4'
 				}
 				
@@ -179,7 +181,9 @@
 			}
 
 			function frontFun() {
-				alert('点击了前一集');
+				player.pause();
+				player.V.src = "/source/video/01.mp4";
+				player.play();
 			}
 
 			function nextFun() {
@@ -277,12 +281,12 @@
 				var el = player.addElement(attribute);
 			}
 
-			function newDanmu() {
+			function newDanmu(text, logo) {
 				//弹幕说明
 				var danmuObj = {
 					list: [{
 							type: 'image',
-							url: '/screenshot/logo.png',
+							url: logo,
 							radius: 30, //圆角弧度
 							width: 30, //定义宽，必需要定义
 							height: 30, //定义高，必需要定义
@@ -294,7 +298,7 @@
 						},
 						{
 							type: 'text', //说明是文本
-							text: '演示弹幕内容，弹幕只支持普通文本，不支持HTML', //文本内容
+							text: text,
 							fontColor: '#FFFFFF',
 							fontSize: 14,
 							fontFamily: '"Microsoft YaHei", YaHei, "微软雅黑", SimHei,"\5FAE\8F6F\96C5\9ED1", "黑体",Arial',
@@ -349,38 +353,10 @@
 			}
 		</script>
 		<div class="chat_box">
-			<div id="chatRoom" class="chat_message">
-			  <div class="message_row you-message">
-				<div class="message-content">
-				  <div class="message-text">hello hello</div>
-				  <div class="message-time">09/23 10:16</div>
-				</div>
-			  </div>
-			  <div class="message_row other-message">
-				<div class="message-content">
-				  <img class="head" src="/img/friends/David.png" alt="">
-				  <div class="message-text">推荐给你一部好看的电影...</div>
-				  <div class="message-time">09/23 10:16</div>
-				</div>
-			  </div>
-			  <div class="message_row other-message">
-				<div class="message-content">
-				  <img class="head" src="/img/friends/David.png" alt="">
-				  <!-- <div class="message-text"></div> -->
-				  <img class="ejIcon" src="/img/emoji/like.png" alt="">
-				  <div class="message-time">09/23 10:16</div>
-				</div>
-			  </div>
-			  <div class="message_row you-message">
-				<div class="message-content">
-				  <div class="message-text">好的，我看一下</div>
-				  <div class="message-time">09/23 10:16</div>
-				</div>
-			  </div>
-			</div>
+			<div id="chatRoom" class="chat_message"></div>
 			<div class="chat_input">
-			  <input class="sendMsg" type="text" placeholder="请输入">
-			  <button type="button">发送</button>
+			  <input id="messageContent" class="sendMsg" type="text" placeholder="请输入" o>
+			  <button type="button" onclick="event2SendMessage()" style="padding: 5px; color: #008EaF">发送</button>
 			</div>
 		</div>
 		<div style="text-align:center;">
@@ -391,6 +367,7 @@
 				<button type="button" onclick="loadedMetaDataHandler()">获取元数据</button>
 				<button type="button" onclick="newElement()">添加元件</button>
 				<button type="button" onclick="newDanmu()">添加弹幕</button>
+				<button type="button" onclick="player.seek(360)">跳转</button>
 			</p>
 		</div>
 	</body>
