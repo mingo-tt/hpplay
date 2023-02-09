@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 
@@ -19,11 +20,13 @@ import java.util.Arrays;
 @Controller
 public class IndexController {
 
+    @RequestMapping("")
+    public String index (HttpServletRequest request) {
+        return "redirect:/app/index";
+    }
+
     @RequestMapping("/app/index")
-    public String index (HttpServletRequest request, HttpSession session) {
-        Cookie[] cookies = request.getCookies();
-        User user = CommonUtil.findUserByCookies(cookies);
-        session.setAttribute("user", user != null ? user.getName() : "admin");
+    public String index (HttpServletRequest request, HttpServletResponse response) {
         return "index";
     }
 

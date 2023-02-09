@@ -1,6 +1,8 @@
 package com.mingo.hpplay.config.socket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mingo.hpplay.object.dto.SystemMessage;
 import com.mingo.hpplay.object.entity.ChatMessage;
 import org.springframework.stereotype.Component;
 
@@ -28,13 +30,15 @@ public class ChatEndpoint {
     private HttpSession httpSession;
 
     @OnOpen
-    public void onOpen(Session session, EndpointConfig config) {
+    public void onOpen(Session session, EndpointConfig config) throws JsonProcessingException {
         this.session = session;
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         this.httpSession = httpSession;
         String userName = (String) httpSession.getAttribute("user");
         onlineUsers.put(userName, this);
-        broadcastAllUsers("isOpen");
+        SystemMessage systemMessage = new SystemMessage(true, userName, 1);
+        ObjectMapper mapper = new ObjectMapper();
+        broadcastAllUsers(mapper.writeValueAsString(systemMessage));
     }
 
     private void broadcastAllUsers(String message) {
@@ -52,8 +56,6 @@ public class ChatEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ChatMessage chatMessage = mapper.readValue(message, ChatMessage.class);
             String userName = (String) httpSession.getAttribute("user");
             for (Map.Entry<String, ChatEndpoint> entry : onlineUsers.entrySet()) {
                 if (!entry.getKey().equals(userName)) {
@@ -66,9 +68,11 @@ public class ChatEndpoint {
     }
 
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session) throws JsonProcessingException {
         String userName = (String) httpSession.getAttribute("user");
         onlineUsers.remove(userName);
-        broadcastAllUsers("onClose");
+        SystemMessage systemMessage = new SystemMessage(true, userName, 0);
+        ObjectMapper mapper = new ObjectMapper();
+        broadcastAllUsers(mapper.writeValueAsString(systemMessage));
     }
 }

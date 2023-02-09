@@ -1,77 +1,121 @@
 let ws;
-const userName = 'pjr';
+let userName = 'pjr';
 $(function (){
-    console.log(document.cookie);
-    $.ajax({
-        url: "/message/list",
-        type: "get",
-        dataType: 'json',
-        success: function (res) {
-            let chatRoomHtml = '';
-            res.forEach(function (message) {
-                let row = '';
-                if (message.userName === userName) {
-                    row += '<div class="message_row you-message">\n' +
-                        '<div class="message-content">\n' +
-                        '<div class="message-text">' + message.content + '</div>\n' +
-                        '<img class="head" src="/img/friends/Judy.png" alt="">\n' +
-                        '<div class="message-time">' + message.createTime + '</div>\n' +
-                        '</div>\n' +
-                        '</div>';
-                    chatRoomHtml += row;
-                }else {
-                    row += '<div class="message_row other-message">\n' +
-                        '<div class="message-content">\n' +
-                        '<img class="head" src="/img/friends/David.png" alt="">\n' +
-                        '<div class="message-text">' + message.content + '</div>\n' +
-                        '<div class="message-time">' + message.createTime + '</div>\n' +
-                        '</div>\n' +
-                        '</div>';
-                    chatRoomHtml += row;
-                }
-            });
-            const $chatRoom = $('#chatRoom');
-            $chatRoom.html(chatRoomHtml);
-            scrollChatRoom($chatRoom);
-        }
-    });
+    if (document.cookie.indexOf("admin=123456") > -1) {
+        userName = "admin";
+    }
+    // $.ajax({
+    //     url: "/message/list",
+    //     type: "get",
+    //     dataType: 'json',
+    //     success: function (res) {
+    //         let chatRoomHtml = '';
+    //         res.forEach(function (message) {
+    //             let row = '';
+    //             let imgUrl = userName === 'pjr' ? "/img/friends/Judy.png" : "/img/friends/David.png";
+    //             if (message.userName === userName) {
+    //                 row += '<div class="message_row you-message">\n' +
+    //                     '<div class="message-content">\n' +
+    //                     '<div class="message-text">' + message.content + '</div>\n' +
+    //                     '<img class="head" src="' + imgUrl + '" alt="">\n' +
+    //                     '<div class="message-time">' + message.createTime + '</div>\n' +
+    //                     '</div>\n' +
+    //                     '</div>';
+    //                 chatRoomHtml += row;
+    //             }else {
+    //                 row += '<div class="message_row other-message">\n' +
+    //                     '<div class="message-content">\n' +
+    //                     '<img class="head" src="' + imgUrl + '" alt="">\n' +
+    //                     '<div class="message-text">' + message.content + '</div>\n' +
+    //                     '<div class="message-time">' + message.createTime + '</div>\n' +
+    //                     '</div>\n' +
+    //                     '</div>';
+    //                 chatRoomHtml += row;
+    //             }
+    //         });
+    //         const $chatRoom = $('#chatRoom');
+    //         $chatRoom.html(chatRoomHtml);
+    //         scrollChatRoom($chatRoom);
+    //     }
+    // });
     $('#messageContent').keydown(function (event) {
         if (event.keyCode === 13) {
             event2SendMessage();
         }
     });
     if (window.WebSocket) {
-        ws = new WebSocket("ws://192.168.101.3:8088/chat");
+        ws = new WebSocket("ws://10.1.121.74:8088/chat");
     }
     ws.onopen = function (evt) {
-        console.log(evt);
-        alert("websocket已连接");
+        console.log("websocket已连接");
     }
     ws.onmessage = function (evt) {
-        // let data = JSON.parse(evt.data);
-        console.log(evt);
+        let data = JSON.parse(evt.data);
+        if (data.isSystemMessage) {
+            if (data.sendUser !== userName) {
+                if (data.state === 1) {
+                    sendSystemMessage("对方已上线");
+                }else {
+                    sendSystemMessage("对方已上线");
+                }
+            }
+        }
     }
     ws.onclose = function (evt) {
-        console.log(evt);
-        alert("websocket已关闭");
+        console.log("websocket已关闭");
     }
 });
 
 function event2SendMessage () {
     let $input = $('#messageContent');
     let messageContent = $input.val();
-    let row = '<div class="message_row you-message">\n' +
+    let data = {userName: userName, content: messageContent};
+    ws.send(data);
+    $.ajax({
+        url: "/add/message",
+        type: "post",
+        data: data,
+        success: function () {
+            let row = '';
+            let imgUrl = '';
+            if (userName === 'pjr') {
+                row = '<div class="message_row you-message">\n' +
+                    '<div class="message-content">\n' +
+                    '<div class="message-text">' + messageContent + '</div>\n' +
+                    '<img class="head" src="/img/friends/Judy.png" alt="">\n' +
+                    '<div class="message-time">' + new Date().format("yyyy-MM-dd hh:mm:ss") + '</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+                imgUrl = '/img/friends/Judy.png';
+            }else {
+                row += '<div class="message_row you-message">\n' +
+                    '<div class="message-content">\n' +
+                    '<div class="message-text">' + messageContent + '</div>\n' +
+                    '<img class="head" src="/img/friends/David.png" alt="">\n' +
+                    '<div class="message-time">' + new Date().format("yyyy-MM-dd hh:mm:ss") + '</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+                imgUrl = "/img/friends/David.png";
+            }
+            const $chatRoom = $('#chatRoom');
+            $chatRoom.append(row);
+            scrollChatRoom($chatRoom);
+            $input.val('');
+            newDanmu(messageContent, imgUrl);
+        }
+    });
+}
+function sendSystemMessage(message) {
+    let row = '<div class="message_row system-message">\n' +
         '<div class="message-content">\n' +
-        '<div class="message-text">' + messageContent + '</div>\n' +
-        '<img class="head" src="/img/friends/Judy.png" alt="">\n' +
+        '<div class="message-text">' + message + '</div>\n' +
         '<div class="message-time">' + new Date().format("yyyy-MM-dd hh:mm:ss") + '</div>\n' +
         '</div>\n' +
         '</div>';
     const $chatRoom = $('#chatRoom');
     $chatRoom.append(row);
     scrollChatRoom($chatRoom);
-    $input.val('');
-    newDanmu(messageContent, '/img/friends/Judy.png');
+    newDanmu(message);
 }
 
 function scrollChatRoom($chatRoom) {

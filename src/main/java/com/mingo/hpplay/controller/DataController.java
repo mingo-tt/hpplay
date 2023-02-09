@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,4 +52,9 @@ public class DataController {
         }).collect(Collectors.toList());
     }
 
+    @PostMapping("/add/message")
+    public void addMessage(ChatMessage message) {
+        message.setCreateTime(new Date());
+        chatMessageRepository.save(message);
+    }
 }
