@@ -353,6 +353,7 @@ li{
     float: left;
     padding: 2em;
     list-style: none;
+    cursor: pointer;
 }
 .currentPlay{
     color: #3333FF;

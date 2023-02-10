@@ -1,4 +1,4 @@
-package com.mingo.hpplay;
+package com.mingo.hpplay.repository;
 
 import com.mingo.hpplay.object.entity.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;

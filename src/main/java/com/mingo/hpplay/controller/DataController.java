@@ -1,9 +1,11 @@
 package com.mingo.hpplay.controller;
 
-import com.mingo.hpplay.ChatMessageRepository;
+import com.mingo.hpplay.object.entity.VideoState;
+import com.mingo.hpplay.repository.ChatMessageRepository;
 import com.mingo.hpplay.object.dto.User;
 import com.mingo.hpplay.object.entity.ChatMessage;
 import com.mingo.hpplay.object.vo.ChatMessageVO;
+import com.mingo.hpplay.repository.VideoStateRepository;
 import com.mingo.hpplay.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,6 +26,9 @@ public class DataController {
 
     @Autowired
     private ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    private VideoStateRepository videoStateRepository;
 
     @PostMapping("/login/info")
     public String login (User user, HttpServletResponse response) {
@@ -56,5 +62,23 @@ public class DataController {
     public void addMessage(ChatMessage message) {
         message.setCreateTime(new Date());
         chatMessageRepository.save(message);
+    }
+
+    @GetMapping("/video/state")
+    public VideoState videoState() {
+        Optional<VideoState> videoStateOptional = videoStateRepository.findById(1);
+        if (videoStateOptional.isPresent()) {
+            return videoStateOptional.get();
+        }else {
+            VideoState defaultVideoState = new VideoState(1, 0, 0);
+            videoStateRepository.save(defaultVideoState);
+            return defaultVideoState;
+        }
+    }
+
+    @PostMapping("/video/state")
+    public void videoState(VideoState videoState) {
+        videoState.setId(1);
+        videoStateRepository.save(videoState);
     }
 }

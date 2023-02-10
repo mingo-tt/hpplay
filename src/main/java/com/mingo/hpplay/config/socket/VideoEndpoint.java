@@ -3,7 +3,6 @@ package com.mingo.hpplay.config.socket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mingo.hpplay.object.dto.SystemMessage;
-import com.mingo.hpplay.object.entity.ChatMessage;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -20,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author HuMingAn
  * @version 1.0
  **/
-@ServerEndpoint(value = "/chat", configurator = GetHttpSessionConfigurator.class)
+@ServerEndpoint(value = "/video", configurator = GetHttpSessionConfigurator.class)
 @Component
-public class ChatEndpoint {
-    private static final Map<String, ChatEndpoint> onlineUsers = new ConcurrentHashMap<>();
+public class VideoEndpoint {
+    private static final Map<String, VideoEndpoint> onlineUsers = new ConcurrentHashMap<>();
 
     private Session session;
 
@@ -36,28 +35,13 @@ public class ChatEndpoint {
         this.httpSession = httpSession;
         String userName = (String) httpSession.getAttribute("user");
         onlineUsers.put(userName, this);
-        SystemMessage systemMessage = new SystemMessage(true, userName, 1, onlineUsers.size());
-        ObjectMapper mapper = new ObjectMapper();
-        broadcastAllUsers(mapper.writeValueAsString(systemMessage));
-    }
-
-    private void broadcastAllUsers(String message) {
-        try {
-            Set<String> names = onlineUsers.keySet();
-            for (String name : names) {
-                ChatEndpoint chatEndpoint = onlineUsers.get(name);
-                chatEndpoint.session.getBasicRemote().sendText(message);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
             String userName = (String) httpSession.getAttribute("user");
-            for (Map.Entry<String, ChatEndpoint> entry : onlineUsers.entrySet()) {
+            for (Map.Entry<String, VideoEndpoint> entry : onlineUsers.entrySet()) {
                 if (!entry.getKey().equals(userName)) {
                     entry.getValue().session.getBasicRemote().sendText(message);
                 }
@@ -71,8 +55,5 @@ public class ChatEndpoint {
     public void onClose(Session session) throws JsonProcessingException {
         String userName = (String) httpSession.getAttribute("user");
         onlineUsers.remove(userName);
-        SystemMessage systemMessage = new SystemMessage(true, userName, 0, onlineUsers.size());
-        ObjectMapper mapper = new ObjectMapper();
-        broadcastAllUsers(mapper.writeValueAsString(systemMessage));
     }
 }

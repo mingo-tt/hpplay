@@ -11,4 +11,5 @@ public class SystemMessage {
     private boolean isSystemMessage;
     private String sendUser;
     private int state;
+    private int number;
 }
