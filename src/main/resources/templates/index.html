@@ -11,8 +11,10 @@
 	</head>
 
 	<body>
-		<div id="video" style="width: 600px; height: 400px;margin:auto;"></div>
+		<div id="video" class="content-div" style="width: 65%; height: 650px;margin:10px;"></div>
 		<script type="text/javascript">
+			var videoList = ['/source/video/01.mp4','/source/video/02.mp4','/source/video/03.mp4'];
+			var currentPlay = 0;
 			var videoObject = {
 				container: '#video', //容器的ID或className
 				variable: 'player',
@@ -38,15 +40,7 @@
 				// }, 
 				//预览图片地址数组，src=图片地址数组，scale=图片截取时间间隔，单位：秒
 				prompt: [{
-						words: '小女孩跟外公学习弹钢琴',
-						time: 16,
-					},
-					{
-						words: '女主离开家乡',
-						time: 60,
-					},
-					{
-						words: '女主奋斗',
+						words: '跳过片头',
 						time: 120,
 					}
 				], //提示点，words=提示点的内容，time=提示点对应的时间
@@ -181,13 +175,29 @@
 			}
 
 			function frontFun() {
-				player.pause();
-				player.V.src = "/source/video/01.mp4";
-				player.play();
+				if (currentPlay !== 0) {
+					currentPlay --;
+					player.pause();
+					player.V.src = videoList[currentPlay];
+					player.play();
+				}
+				changeVideoSelected();
 			}
 
 			function nextFun() {
-				alert('点击了下一集');
+				if (currentPlay !== videoList.length - 1) {
+					currentPlay ++;
+					player.pause();
+					player.V.src = videoList[currentPlay];
+					player.play();
+				}
+				changeVideoSelected();
+			}
+
+			function changeVideoSelected() {
+				let $li = $('li');
+				$li.removeClass("currentPlay");
+				$('ul li').eq(currentPlay).addClass("currentPlay");
 			}
 
 			function newVideo() {
@@ -352,23 +362,34 @@
 				player.getByElement(div).innerHTML = text;
 			}
 		</script>
-		<div class="chat_box">
+		<div class="chat_box content-div">
 			<div id="chatRoom" class="chat_message"></div>
 			<div class="chat_input">
 			  <input id="messageContent" class="sendMsg" type="text" placeholder="请输入" o>
 			  <button type="button" onclick="event2SendMessage()" style="padding: 5px; color: #008EaF">发送</button>
 			</div>
 		</div>
+<!--		<div style="text-align:center;">-->
+<!--			<p>-->
+<!--				<button type="button" onclick="player.play()">播放</button>-->
+<!--				<button type="button" onclick="player.pause()">暂停</button>-->
+<!--				<button type="button" onclick="player.playOrPause()">播放/暂停</button>-->
+<!--				<button type="button" onclick="loadedMetaDataHandler()">获取元数据</button>-->
+<!--				<button type="button" onclick="newElement()">添加元件</button>-->
+<!--				<button type="button" onclick="newDanmu()">添加弹幕</button>-->
+<!--				<button type="button" onclick="player.seek(360)">跳转</button>-->
+<!--			</p>-->
+<!--		</div>-->
 		<div style="text-align:center;">
-			<p>
-				<button type="button" onclick="player.play()">播放</button>
-				<button type="button" onclick="player.pause()">暂停</button>
-				<button type="button" onclick="player.playOrPause()">播放/暂停</button>
-				<button type="button" onclick="loadedMetaDataHandler()">获取元数据</button>
-				<button type="button" onclick="newElement()">添加元件</button>
-				<button type="button" onclick="newDanmu()">添加弹幕</button>
-				<button type="button" onclick="player.seek(360)">跳转</button>
-			</p>
+			<ul>
+				<li class="currentPlay" url="/source/video/01.mp4">第一集</li>
+				<li url="/source/video/02.mp4">第二集</li>
+				<li url="/source/video/03.mp4">第三集</li>
+				<li>第四集</li>
+				<li>第五集</li>
+				<li>第六集</li>
+				<li>第七集</li>
+			</ul>
 		</div>
 	</body>
 

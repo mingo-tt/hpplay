@@ -3,6 +3,12 @@
     margin: 0;
     box-sizing: border-box;
 }
+body{
+    background-color: snow;
+}
+.content-div{
+    display: inline-block;
+}
 input:focus::-webkit-input-placeholder {color: transparent;}
 ::placeholder {
     font-size: 20px;
@@ -163,7 +169,7 @@ input:focus{
     text-overflow: ellipsis;
 }
 .chat_box{
-    width: 50%;
+    width: 30%;
     height: 100%;
     background-color: #f1f1f1;
     position: relative;
@@ -172,10 +178,11 @@ input:focus{
     padding: 0 20px; */
     border-right: 1px solid #b1b1b1;
     margin: 10px auto;
+    overflow: hidden;
 }
 .chat_box .chat_message{
     width: 100%;
-    height: 280px;
+    height: 550px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -341,4 +348,12 @@ input:focus{
 }
 .me_photo img{
     width: 100%;
+}
+li{
+    float: left;
+    padding: 2em;
+    list-style: none;
+}
+.currentPlay{
+    color: #3333FF;
 }

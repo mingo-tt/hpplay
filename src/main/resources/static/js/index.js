@@ -44,6 +44,12 @@ $(function (){
             event2SendMessage();
         }
     });
+    $('li').click(function (event) {
+        $("li").removeClass("currentPlay");
+        let $this = $(this);
+        $this.addClass("currentPlay");
+        player.V.src = $this.attr('url');
+    });
     if (window.WebSocket) {
         ws = new WebSocket("ws://10.1.121.74:8088/chat");
     }
